@@ -858,23 +858,64 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
 
 /* ══════════════════════════════ RESPONSIVE */
 @media (max-width: 768px) {
-  :root { --sidebar: 60px; }
+  /* App: columna, la sidebar va abajo */
+  .app {
+    flex-direction: column;
+    height: 100dvh;
+  }
 
-  .sidebar { padding: 16px 8px; }
-  .brand .logo-text, .user-name { display: none; }
-  .nav-item span { display: none; }
-  .nav-item { justify-content: center; padding: 10px; }
-  .sidebar-bottom { flex-direction: column; gap: 6px; }
-  .user-info { justify-content: center; }
+  /* Sidebar → bottom nav bar */
+  .sidebar {
+    width: 100%;
+    height: 60px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    order: 2;
+    flex-shrink: 0;
+  }
+
+  /* Ocultar logo y nombre de usuario */
+  .brand { display: none; }
+  .user-name { display: none; }
+
+  /* Nav horizontal */
+  .sidebar-top { flex-direction: row; gap: 0; width: auto; }
+  .nav { flex-direction: row; gap: 4px; }
+
+  /* Items del nav centrados */
+  .nav-item {
+    justify-content: center;
+    flex-direction: column;
+    padding: 6px 14px;
+    gap: 3px;
+    font-size: 10px;
+  }
+  .nav-item svg { width: 20px; height: 20px; }
+
+  /* Sidebar bottom: avatar + logout en fila compacta */
+  .sidebar-bottom {
+    flex-direction: row;
+    gap: 8px;
+    border-top: none;
+    padding-top: 0;
+  }
+  .user-info { gap: 0; }
+
+  /* Main ocupa el resto */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    order: 1;
+  }
 
   .section { padding: 20px 16px; }
-
   .board { grid-template-columns: 1fr; }
-
   .editor-layout { grid-template-columns: 1fr; }
-
   .detail-title-row { flex-direction: column; align-items: flex-start; }
-
   .section-header { flex-direction: column; align-items: flex-start; }
 }
 
@@ -937,10 +978,10 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
   .history-entry { font-size: 10px; word-break: break-all; }
 }
 
-/* ── 480px: móvil (refuerza el bloque existente) ─────── */
+/* ── 480px: móvil ─────── */
 @media (max-width: 480px) {
-  /* Sidebar: iconos compactos, el existente ya reduce a 60px */
-  .sidebar { padding: 12px 6px; }
+  /* Sidebar ya es bottom bar; solo ajustamos padding horizontal */
+  .sidebar { padding: 0 8px; }
 
   /* Sección */
   .section { padding: 16px 12px; }
