@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Collab — Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════ AUTH SCREEN -->
+  <div id="auth-screen" class="auth-screen">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="logo-mark">C</span>
+        <span class="logo-text">COLLAB</span>
+      </div>
+      <p class="auth-subtitle">Workspace privado</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Iniciar sesión</button>
+        <button class="auth-tab" data-tab="register">Registrarse</button>
+      </div>
+
+      <div id="auth-form-login" class="auth-form active">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="login-email" placeholder="tu@email.com" />
+        </div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input type="password" id="login-password" placeholder="••••••••" />
+        </div>
+        <button class="btn-primary" id="btn-login">Entrar</button>
+      </div>
+
+      <div id="auth-form-register" class="auth-form">
+        <div class="field">
+          <label>Nombre</label>
+          <input type="text" id="reg-name" placeholder="Tu nombre" />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="reg-email" placeholder="tu@email.com" />
+        </div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input type="password" id="reg-password" placeholder="mínimo 6 caracteres" />
+        </div>
+        <button class="btn-primary" id="btn-register">Crear cuenta</button>
+      </div>
+
+      <div id="auth-error" class="auth-error hidden"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ APP SHELL -->
+  <div id="app" class="app hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="brand">
+          <span class="logo-mark sm">C</span>
+          <span class="logo-text sm">COLLAB</span>
+        </div>
+        <nav class="nav">
+          <button class="nav-item active" data-section="ideas">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zm2 14H10v-1h4v1zm0-2H10v-1h4v1z"/></svg>
+            Ideas
+          </button>
+          <button class="nav-item" data-section="projects">
+            <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+            Proyectos
+          </button>
+        </nav>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="user-info">
+          <div class="user-avatar" id="user-avatar">?</div>
+          <span id="user-name" class="user-name">Usuario</span>
+        </div>
+        <button class="btn-logout" id="btn-logout" title="Cerrar sesión">
+          <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+      <!-- ── TOAST -->
+      <div id="toast" class="toast hidden">
+        <span id="toast-msg"></span>
+      </div>
+
+      <!-- ════════════ SECCIÓN: IDEAS -->
+      <section id="section-ideas" class="section active">
+        <div class="section-header">
+          <div>
+            <h1>Ideas</h1>
+            <p class="section-desc">Crea y analiza ideas en el tablero colaborativo</p>
+          </div>
+          <button class="btn-primary" id="btn-new-idea">+ Nueva idea</button>
+        </div>
+
+        <!-- LISTA DE IDEAS -->
+        <div id="ideas-list" class="ideas-list">
+          <div class="empty-state" id="ideas-empty">
+            <div class="empty-icon">💡</div>
+            <p>Sin ideas aún. ¡Crea la primera!</p>
+          </div>
+        </div>
+
+        <!-- DETALLE DE IDEA / TABLERO -->
+        <div id="idea-detail" class="idea-detail hidden">
+          <div class="detail-header">
+            <button class="btn-back" id="btn-back-ideas">← Volver</button>
+            <div class="detail-title-row">
+              <h2 id="idea-detail-title" contenteditable="true"></h2>
+              <button class="btn-save-idea btn-sm" id="btn-save-idea-meta">Guardar</button>
+            </div>
+            <p id="idea-detail-desc" contenteditable="true" class="idea-detail-desc"></p>
+          </div>
+
+          <div class="board">
+            <div class="board-col" data-col="ventajas">
+              <div class="col-header">
+                <span class="col-dot green"></span>
+                <h3>Ventajas</h3>
+                <button class="btn-add-item" data-col="ventajas">+</button>
+              </div>
+              <div class="col-items" id="col-ventajas"></div>
+            </div>
+            <div class="board-col" data-col="desventajas">
+              <div class="col-header">
+                <span class="col-dot yellow"></span>
+                <h3>Desventajas</h3>
+                <button class="btn-add-item" data-col="desventajas">+</button>
+              </div>
+              <div class="col-items" id="col-desventajas"></div>
+            </div>
+            <div class="board-col" data-col="problemas">
+              <div class="col-header">
+                <span class="col-dot red"></span>
+                <h3>Problemas</h3>
+                <button class="btn-add-item" data-col="problemas">+</button>
+              </div>
+              <div class="col-items" id="col-problemas"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════ SECCIÓN: PROYECTOS -->
+      <section id="section-projects" class="section hidden">
+        <div class="section-header">
+          <div>
+            <h1>Proyectos</h1>
+            <p class="section-desc">Código compartido, ejecutable en el navegador</p>
+          </div>
+          <button class="btn-primary" id="btn-new-project">+ Nuevo proyecto</button>
+        </div>
+
+        <div id="projects-list" class="projects-list">
+          <div class="empty-state" id="projects-empty">
+            <div class="empty-icon">⚡</div>
+            <p>Sin proyectos. ¡Crea el primero!</p>
+          </div>
+        </div>
+
+        <!-- EDITOR DE PROYECTO -->
+        <div id="project-detail" class="project-detail hidden">
+          <div class="detail-header">
+            <button class="btn-back" id="btn-back-projects">← Volver</button>
+            <div class="detail-title-row">
+              <h2 id="project-detail-title" contenteditable="true"></h2>
+              <div class="project-actions">
+                <button class="btn-run" id="btn-run-code">▶ Ejecutar</button>
+                <button class="btn-save-idea btn-sm" id="btn-save-project">Guardar</button>
+              </div>
+            </div>
+            <p id="project-detail-desc" contenteditable="true" class="idea-detail-desc"></p>
+          </div>
+
+          <div class="editor-layout">
+            <div class="editor-pane">
+              <div class="editor-label">JavaScript</div>
+              <textarea id="code-editor" class="code-editor" spellcheck="false" placeholder="// Escribe tu código JavaScript aquí...
+console.log('Hola, mundo!');"></textarea>
+            </div>
+            <div class="output-pane">
+              <div class="editor-label">
+                Salida
+                <button class="btn-clear-output" id="btn-clear-output">Limpiar</button>
+              </div>
+              <div id="code-output" class="code-output"></div>
+            </div>
+          </div>
+
+          <!-- Historial -->
+          <div class="history-section">
+            <h4>Historial de guardados</h4>
+            <div id="save-history" class="save-history"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ══════════════════════════════════════ MODALES -->
+  <!-- Modal: Nueva Idea -->
+  <div id="modal-new-idea" class="modal hidden">
+    <div class="modal-card">
+      <h3>Nueva idea</h3>
+      <div class="field">
+        <label>Título</label>
+        <input type="text" id="new-idea-title" placeholder="Nombre de la idea" />
+      </div>
+      <div class="field">
+        <label>Descripción</label>
+        <textarea id="new-idea-desc" placeholder="¿De qué trata esta idea?" rows="3"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="cancel-new-idea">Cancelar</button>
+        <button class="btn-primary" id="confirm-new-idea">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Nuevo Proyecto -->
+  <div id="modal-new-project" class="modal hidden">
+    <div class="modal-card">
+      <h3>Nuevo proyecto</h3>
+      <div class="field">
+        <label>Nombre</label>
+        <input type="text" id="new-project-name" placeholder="Nombre del proyecto" />
+      </div>
+      <div class="field">
+        <label>Descripción</label>
+        <textarea id="new-project-desc" placeholder="¿Qué hace este proyecto?" rows="3"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="cancel-new-project">Cancelar</button>
+        <button class="btn-primary" id="confirm-new-project">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Nuevo ítem tablero -->
+  <div id="modal-new-item" class="modal hidden">
+    <div class="modal-card">
+      <h3 id="modal-item-title">Agregar ítem</h3>
+      <div class="field">
+        <label>Texto</label>
+        <input type="text" id="new-item-text" placeholder="Escribe aquí..." />
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="cancel-new-item">Cancelar</button>
+        <button class="btn-primary" id="confirm-new-item">Agregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
